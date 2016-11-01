@@ -34,8 +34,10 @@ class ImageUploader < CarrierWave::Uploader::Base
   # Create different versions of your uploaded files:
   version :thumb do
     process :resize_to_fit => [200, 200]
-    process :poster  
+    process :poster
   end
+
+
 
 
   # Add a white list of extensions which are allowed to be uploaded.
@@ -45,17 +47,14 @@ class ImageUploader < CarrierWave::Uploader::Base
   end
 
   def poster
-  manipulate! do |source|
-  txt = Magick::Draw.new
-  txt.pointsize = 12
-  txt.gravity = Magick::SouthGravity
-  txt.stroke = "#000000"
-  title = "FSJIDFOSDF"
-  # source = source.resize_to_fill(400, 400).border(10, 10, "black")
-  source.annotate(txt, 0, 0, 0, 40, title)
-
-end
-end
+    manipulate! do |source|
+      source.combine_options do |c|
+        c.gravity 'Southwest'
+        c.draw 'text 10,10 "whatever"'
+        c.fill("#FFFFFF")
+      end
+    end
+  end
 
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
@@ -64,4 +63,4 @@ end
   # end
 
 
-end  
+end
